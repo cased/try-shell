@@ -12,7 +12,8 @@ services:
       - CASED_SHELL_HOSTNAME=localhost:8888
       - CASED_SHELL_HOST_FILE=/opt/cased/tmp/jump.json
       - CASED_SHELL_TLS=off
-      - CASED_SHELL_SECRET
+      - CASED_SHELL_SECRET=${CASED_SHELL_SECRET:?required}
+      - NOT_USED_PUBLIC_KEY=${AUTHORIZED_KEY:?required}
     networks:
       - frontend
       - backend
@@ -125,7 +126,7 @@ services:
         tail -F /does-not-exist 2>/dev/null
     environment:
       - PASSWORD_ACCESS=false
-      - PUBLIC_KEY=cert-authority,principals="${PRINCIPALS?required}" ecdsa-sha2-nistp256 ${CA_PUBKEY?required}
+      - PUBLIC_KEY=cert-authority,principals="${PRINCIPALS?required}" ${CA_PUBKEY?required}
       - SUDO_ACCESS=true
       - USER_NAME=sshuser
     volumes:
@@ -151,7 +152,7 @@ services:
       - 2222
     environment:
       - PASSWORD_ACCESS=false
-      - PUBLIC_KEY=cert-authority,principals="${PRINCIPALS?required}" ecdsa-sha2-nistp256 ${CA_PUBKEY?required}
+      - PUBLIC_KEY=cert-authority,principals="${PRINCIPALS?required}" ${CA_PUBKEY?required}
       - SUDO_ACCESS=true
       - USER_NAME=sshuser
     volumes:
