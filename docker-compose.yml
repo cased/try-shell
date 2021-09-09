@@ -1,0 +1,178 @@
+networks:
+  frontend: {}
+  backend: {}
+
+services:
+  try-shell:
+    image: ghcr.io/cased/shell:latest
+    pull_policy: always
+    depends_on:
+      - jump
+    environment: 
+      - CASED_SHELL_HOSTNAME=localhost:8888
+      - CASED_SHELL_HOST_FILE=/opt/cased/tmp/jump.json
+      - CASED_SHELL_TLS=off
+      - CASED_SHELL_SECRET
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "8888:8888"
+    volumes:
+      - shared:/opt/cased/tmp
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/_ping"]
+      interval: 1s
+      timeout: 1s
+      retries: 3
+      start_period: 1s
+
+  jump:
+    entrypoint: ["/bin/app", "/opt/cased/tmp/jump.yaml", "/opt/cased/tmp/jump.json"]
+    image: ghcr.io/cased/jump:latest
+    restart: on-failure
+    pull_policy: always
+    depends_on:
+      jump-config:
+        condition: service_healthy
+    volumes:
+      - shared:/opt/cased/tmp
+
+  jump-config:
+    image: busybox
+    command:
+      - /bin/sh
+      - -c
+      - |
+        cat << EOF > /opt/cased/tmp/jump.yaml
+        queries:
+          - provider: static
+            prompt:
+              featured: true
+              hostname: demo-bastion-server
+              username: sshuser
+              port: 2222
+              labels:
+                app: bastion
+          - provider: static
+            prompt:
+              featured: true
+              hostname: demo-app-server
+              username: sshuser
+              port: 2222
+              labels:
+                app: app
+              proxyJumpSelector:
+                app: bastion
+        EOF
+        touch /done
+        tail -F /does-not-exist 2>/dev/null
+    restart: on-failure
+    init: true
+    volumes:
+      - shared:/opt/cased/tmp
+    healthcheck:
+      test: ["CMD", "test", "-f", "/done"]
+      interval: 1s
+      timeout: 1s
+      retries: 3
+      start_period: 1s
+
+  ssh-config:
+    image: busybox
+    command:
+      - /bin/sh
+      - -c
+      - |
+        cat << EOF > /config/custom-cont-init.d/88-cased
+        #!/usr/bin/with-contenv bash
+
+        sed -i 's@AllowTcpForwarding no@AllowTcpForwarding yes@' /etc/ssh/sshd_config
+
+        EOF
+        chmod a+x /config/custom-cont-init.d/88-cased
+        touch /done
+        tail -F /does-not-exist 2>/dev/null
+    restart: on-failure
+    init: true
+    volumes:
+      - custom-ssh-init:/config/custom-cont-init.d
+    healthcheck:
+      test: ["CMD", "test", "-f", "/done"]
+      interval: 1s
+      timeout: 1s
+      retries: 3
+      start_period: 1s
+
+  demo-bastion-server:
+    image: linuxserver/openssh-server
+    init: true
+    depends_on:
+      try-shell:
+        condition: service_healthy
+      ssh-config:
+        condition: service_healthy
+    networks:
+      - frontend
+      - backend
+    expose:
+      - 2222
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Welcome to the bastion server" > /etc/motd
+        tail -F /does-not-exist 2>/dev/null
+    environment:
+      - PASSWORD_ACCESS=false
+      - PUBLIC_KEY=cert-authority,principals="${PRINCIPALS?required}" ecdsa-sha2-nistp256 ${CA_PUBKEY?required}
+      - SUDO_ACCESS=true
+      - USER_NAME=sshuser
+    volumes:
+      - custom-ssh-init:/config/custom-cont-init.d
+
+  demo-app-server:
+    image: linuxserver/openssh-server
+    init: true
+    depends_on:
+      try-shell:
+        condition: service_healthy
+      ssh-config:
+        condition: service_healthy
+    command:
+      - /bin/sh
+      - -c
+      - |
+        echo "Welcome to the bastion server" > /etc/motd
+        tail -F /does-not-exist 2>/dev/null
+    networks:
+      - backend
+    expose:
+      - 2222
+    environment:
+      - PASSWORD_ACCESS=false
+      - PUBLIC_KEY=cert-authority,principals="${PRINCIPALS?required}" ecdsa-sha2-nistp256 ${CA_PUBKEY?required}
+      - SUDO_ACCESS=true
+      - USER_NAME=sshuser
+    volumes:
+      - custom-ssh-init:/config/custom-cont-init.d
+
+  # Print usage instructions once all containers have been started
+  usage:
+    image: busybox
+    init: true
+    depends_on:
+      - demo-bastion-server
+      - demo-app-server
+    command:
+      - /bin/sh
+      - -c
+      - |
+        sleep 3
+        echo "Visit http://localhost:8888 to try out Cased Shell!"
+        tail -F /does-not-exist 2>/dev/null
+
+volumes:
+  shared: {}
+  custom-ssh-init: {}
+  
