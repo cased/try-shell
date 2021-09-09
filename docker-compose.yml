@@ -90,6 +90,7 @@ services:
 
         sed -i 's@AllowTcpForwarding no@AllowTcpForwarding yes@' /etc/ssh/sshd_config
 
+        touch /done
         EOF
         chmod a+x /config/custom-cont-init.d/88-cased
         touch /done
@@ -126,11 +127,17 @@ services:
         tail -F /does-not-exist 2>/dev/null
     environment:
       - PASSWORD_ACCESS=false
-      - PUBLIC_KEY=cert-authority,principals="${PRINCIPALS?required}" ${CA_PUBKEY?required}
+      - PUBLIC_KEY=${AUTHORIZED_KEY:?required}
       - SUDO_ACCESS=true
       - USER_NAME=sshuser
     volumes:
       - custom-ssh-init:/config/custom-cont-init.d
+    healthcheck:
+      test: ["CMD", "test", "-f", "/done"]
+      interval: 1s
+      timeout: 1s
+      retries: 3
+      start_period: 1s
 
   demo-app-server:
     image: linuxserver/openssh-server
@@ -152,19 +159,27 @@ services:
       - 2222
     environment:
       - PASSWORD_ACCESS=false
-      - PUBLIC_KEY=cert-authority,principals="${PRINCIPALS?required}" ${CA_PUBKEY?required}
+      - PUBLIC_KEY=${AUTHORIZED_KEY:?required}
       - SUDO_ACCESS=true
       - USER_NAME=sshuser
     volumes:
       - custom-ssh-init:/config/custom-cont-init.d
+    healthcheck:
+      test: ["CMD", "test", "-f", "/done"]
+      interval: 1s
+      timeout: 1s
+      retries: 3
+      start_period: 1s
 
   # Print usage instructions once all containers have been started
   usage:
     image: busybox
     init: true
     depends_on:
-      - demo-bastion-server
-      - demo-app-server
+      demo-app-server:
+        condition: service_healthy
+      demo-bastion-server:
+        condition: service_healthy
     command:
       - /bin/sh
       - -c
