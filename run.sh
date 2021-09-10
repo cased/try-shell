@@ -11,6 +11,12 @@ else
   : # TODO obtain docker-compose.yml via curl once project is OSS'd
 fi
 
+if [ -z "${CASED_SHELL_HOSTNAME}" ]; then
+  echo "CASED_SHELL_HOSTNAME required" 1>&2
+  exit 1
+fi
+export CASED_SHELL_PORT=$(echo "${CASED_SHELL_HOSTNAME}" | cut -f 2 -d :)
+
 echo "Starting Cased Shell. Press Ctrl+C to quit" 1>&2
 
 docker compose --project-name try-shell --file $tmpdir/docker-compose.yml up \

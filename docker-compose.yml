@@ -9,20 +9,22 @@ services:
     depends_on:
       - jump
     environment: 
-      - CASED_SHELL_HOSTNAME=localhost:8888
       - CASED_SHELL_HOST_FILE=/opt/cased/tmp/jump.json
       - CASED_SHELL_TLS=off
-      - CASED_SHELL_SECRET=${CASED_SHELL_SECRET:?required}
-      - NOT_USED_PUBLIC_KEY=${AUTHORIZED_KEY:?required}
+      - CASED_SHELL_HOSTNAME=${CASED_SHELL_HOSTNAME:?hostname_required}
+      - CASED_SHELL_SECRET=${CASED_SHELL_SECRET:?secret_required}
+      # validate these variables here even though we don't use them in the app
+      - UNUSED_PORT=${CASED_SHELL_PORT:?port_required}
+      - UNUSED_PUBLIC_KEY=${AUTHORIZED_KEY:?key_required}
     networks:
       - frontend
       - backend
     ports:
-      - "8888:8888"
+      - "${CASED_SHELL_PORT:?port_required}:${CASED_SHELL_PORT:?port_required}"
     volumes:
       - shared:/opt/cased/tmp
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8888/_ping"]
+      test: ["CMD", "curl", "-f", "http://${CASED_SHELL_HOSTNAME:?hostname_required}/_ping"]
       interval: 1s
       timeout: 1s
       retries: 3
@@ -127,7 +129,7 @@ services:
         tail -F /does-not-exist 2>/dev/null
     environment:
       - PASSWORD_ACCESS=false
-      - PUBLIC_KEY=${AUTHORIZED_KEY:?required}
+      - PUBLIC_KEY=${AUTHORIZED_KEY:?key_required}
       - SUDO_ACCESS=true
       - USER_NAME=sshuser
     volumes:
@@ -159,7 +161,7 @@ services:
       - 2222
     environment:
       - PASSWORD_ACCESS=false
-      - PUBLIC_KEY=${AUTHORIZED_KEY:?required}
+      - PUBLIC_KEY=${AUTHORIZED_KEY:?key_required}
       - SUDO_ACCESS=true
       - USER_NAME=sshuser
     volumes:
@@ -185,7 +187,7 @@ services:
       - -c
       - |
         sleep 3
-        echo "Visit http://localhost:8888 to try out Cased Shell!"
+        echo "Visit http://${CASED_SHELL_HOSTNAME} to try out Cased Shell!"
         tail -F /does-not-exist 2>/dev/null
 
 volumes:
