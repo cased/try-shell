@@ -8,7 +8,7 @@ trap "docker compose --project-name try-shell --file $tmpdir/docker-compose.yml 
 if grep -q try-shell docker-compose.yml>/dev/null; then
   cp docker-compose.yml $tmpdir/docker-compose.yml
 else
-  : # TODO obtain docker-compose.yml via curl once project is OSS'd
+  curl https://github.com/cased/try-shell/raw/main/docker-compose.yml > $tmpdir/docker-compose.yml
 fi
 
 if [ -z "${CASED_SHELL_HOSTNAME}" ]; then
