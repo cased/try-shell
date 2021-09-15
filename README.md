@@ -4,8 +4,6 @@
 
 ## Usage
 
-> :construction: :warning: This approach will work **once this repo is open sourced**. :construction: :warning:
-
 1. [Schedule a demo of Cased Shell](https://cased.com). Login to [Cased](https://app.cased.com) with the account created during the demo.
 2. Click on the `localhost:NNNN` shell on your dashboard to view the demo shell.
 3. Click 'Settings' and run the command listed. Alternatively, note the value for `CASED_SHELL_HOSTNAME`, `CASED_SHELL_SECRET`, and `AUTHORIZED_KEY` and then run:
