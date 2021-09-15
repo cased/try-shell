@@ -154,7 +154,7 @@ services:
       - /bin/sh
       - -c
       - |
-        echo "Welcome to the bastion server" > /etc/motd
+        echo "Welcome to the app server" > /etc/motd
         tail -F /does-not-exist 2>/dev/null
     networks:
       - backend
