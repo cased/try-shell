@@ -14,8 +14,8 @@ services:
       - CASED_SHELL_TLS=off
       - CASED_SHELL_HOSTNAME=${CASED_SHELL_HOSTNAME:?hostname_required}
       - CASED_SHELL_SECRET=${CASED_SHELL_SECRET:?secret_required}
-      # validate these variables here even though we don't use them in the app
-      - UNUSED_PORT=${CASED_SHELL_PORT:?port_required}
+      - CASED_SHELL_PORT=${CASED_SHELL_PORT:?port_required}
+      # validate here even though we don't use them in the app
       - UNUSED_PUBLIC_KEY=${AUTHORIZED_KEY:?key_required}
     networks:
       - frontend
