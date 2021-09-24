@@ -9,7 +9,7 @@ services:
     pull_policy: always
     depends_on:
       - jump
-    environment: 
+    environment:
       - CASED_SHELL_HOST_FILE=/opt/cased/tmp/jump.json
       - CASED_SHELL_TLS=off
       - CASED_SHELL_HOSTNAME=${CASED_SHELL_HOSTNAME:?hostname_required}
@@ -25,14 +25,21 @@ services:
     volumes:
       - shared:/opt/cased/tmp
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://${CASED_SHELL_HOSTNAME:?hostname_required}/_ping"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://${CASED_SHELL_HOSTNAME:?hostname_required}/_ping",
+        ]
       interval: 1s
       timeout: 1s
       retries: 3
       start_period: 1s
 
   jump:
-    entrypoint: ["/bin/app", "/opt/cased/tmp/jump.yaml", "/opt/cased/tmp/jump.json"]
+    entrypoint:
+      ["/bin/app", "/opt/cased/tmp/jump.yaml", "/opt/cased/tmp/jump.json"]
     image: ghcr.io/cased/jump:latest
     restart: on-failure
     pull_policy: always
@@ -127,6 +134,12 @@ services:
       - -c
       - |
         echo "Welcome to the bastion server" > /etc/motd
+        mkdir -p /home/$$USER_NAME
+        cp -r /config/.ssh /home/$$USER_NAME/
+        chown -R $$USER_NAME:$$USER_NAME /home/$$USER_NAME
+        usermod -d /home/$$USER_NAME $$USER_NAME
+        echo example > /home/$$USER_NAME/example.txt
+        chown $$USER_NAME /home/$$USER_NAME/example.txt
         tail -F /does-not-exist 2>/dev/null
     environment:
       - PASSWORD_ACCESS=false
@@ -155,6 +168,12 @@ services:
       - -c
       - |
         echo "Welcome to the app server" > /etc/motd
+        mkdir -p /home/$$USER_NAME
+        cp -r /config/.ssh /home/$$USER_NAME/
+        chown -R $$USER_NAME:$$USER_NAME /home/$$USER_NAME
+        usermod -d /home/$$USER_NAME $$USER_NAME
+        echo example > /home/$$USER_NAME/example.txt
+        chown $$USER_NAME /home/$$USER_NAME/example.txt
         tail -F /does-not-exist 2>/dev/null
     networks:
       - backend
@@ -194,4 +213,3 @@ services:
 volumes:
   shared: {}
   custom-ssh-init: {}
-  
