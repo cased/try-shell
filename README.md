@@ -23,3 +23,7 @@ git clone https://github.com/cased/try-shell
 cd try-shell
 CASED_SHELL_HOSTNAME=<hostname> CASED_SHELL_SECRET=<secret> AUTHORIZED_KEY=<authorized key line> bash run.sh
 ```
+
+## Notes
+
+* Uploads and downloads are not currently available for local try-outs.
