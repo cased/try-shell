@@ -12,6 +12,15 @@
 The example in this directory deploys Cased Shell and an internally-accessible SSH server to your Kubernetes cluster. The container running the SSH server is granted admin access to the Kubernetes cluster, and is configured to allow access from any member of your SSO organization.
 ## Deploying
 
+### Clone this repo
+
+```
+git clone https://github.com/cased/try-shell
+cd try-shell
+# TODO remove before merge
+git checkout kustomize
+```
+
 ### Create a namespace
 
 ```
@@ -27,8 +36,8 @@ vi .env
 Update the Kustomize file, paying special attention to the ingress strategy your cluster uses. You will need to either edit `ingresses/cased-shell.yaml` or [patch](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/#customizing) the included Service to change its type to LoadBalancer to allow HTTPS traffic to reach Cased Shell using `$CASED_SHELL_HOSTNAME`.
 
 ```
-vi ingresses/cased-shell.yaml
-vi kustomization.yaml
+vi examples/kubernetes/ingresses/cased-shell.yaml
+vi examples/kubernetes/kustomization.yaml
 ```
 
 ### Preview configuration

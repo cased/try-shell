@@ -2,8 +2,10 @@ namespace: shell
 
 resources:
 # A Cased Shell Deployment, Service, and ServiceAccount
+# TODO remove ref before merge
 - https://github.com/cased/try-shell/kustomize/bases/cased-shell?ref=kustomize
 # A SSHD Deployment, Service, and ServiceAccount
+# TODO remove ref before merge
 - https://github.com/cased/try-shell/kustomize/bases/kubectl-sshd?ref=kustomize
 # An Ingress object facilitating access to the cased-shell Service.
 - ingresses/cased-shell.yaml
