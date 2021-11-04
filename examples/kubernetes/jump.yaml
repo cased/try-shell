@@ -15,7 +15,7 @@ queries:
       featured: true
       username: kubectl
       hostname: kubectl-sshd
-      jumpCommand: kubectl -n shell exec -it deploy/shell -- /bin/bash
+      jumpCommand: kubectl -n shell exec -it deploy/cased-shell -- /bin/bash
   - provider: static
     prompt:
       name: event log
