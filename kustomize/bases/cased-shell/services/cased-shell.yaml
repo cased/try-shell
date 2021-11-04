@@ -7,5 +7,9 @@ spec:
   - port: 443
     targetPort: https
     name: https
+  # Optional, disabled by default.
+  # - port: 80
+  #   targetPort: http
+  #   name: http
   selector:
     app: cased-shell

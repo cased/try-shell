@@ -1,0 +1,26 @@
+queries:
+  - provider: static
+    prompt:
+      name: kubectl
+      description: a shell with kubectl and access to the cluster
+      featured: true
+      hostname: kubectl-sshd
+      username: kubectl
+      labels:
+        app: kubectl
+  - provider: static
+    prompt:
+      name: shell
+      description: a shell on the shell deployment
+      featured: true
+      username: kubectl
+      hostname: kubectl-sshd
+      jumpCommand: kubectl -n shell exec -it deploy/shell -- /bin/bash
+  - provider: static
+    prompt:
+      name: event log
+      description: kubernetes events
+      featured: true
+      username: kubectl
+      hostname: kubectl-sshd
+      jumpCommand: kubectl get events --all-namespaces -w

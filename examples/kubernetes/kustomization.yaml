@@ -1,0 +1,36 @@
+namespace: shell
+
+resources:
+# A Cased Shell Deployment, Service, and ServiceAccount
+- https://github.com/cased/try-shell/kustomize/bases/cased-shell?ref=kustomize
+# A SSHD Deployment, Service, and ServiceAccount
+- https://github.com/cased/try-shell/kustomize/bases/kubectl-sshd?ref=kustomize
+# An Ingress object facilitating access to the cased-shell Service.
+- ingresses/cased-shell.yaml
+# A ClusterRoleBinding granting the the kubectl-sshd ServiceAccount admin access to the cluster.
+- clusterrolebindings/kubectl-sshd.yaml
+
+secretGenerator:
+- name: cased-shell
+  envs:
+  - .env
+
+configMapGenerator:
+- name: jump
+  files:
+  - ./jump.yaml
+- name: cased-shell
+  literals:
+  # !!! IMPORTANT !!!
+  # Set to the hostname you'll be using to access this deployment of Cased Shell
+  - CASED_SHELL_HOSTNAME=shell.example.com
+  # !!! IMPORTANT !!!
+  # Set to internal if your ingress provider handles TLS. If using a Service Load Balancer, set to 'auto' to automatically obtain SSL certs. Set to 'off' if your load balancer may only communicate with backends over HTTP
+  - CASED_SHELL_TLS=internal
+  # https://docs.cased.com/docs/environment-variables
+- name: kubectl-sshd
+  literals:
+  # !!! IMPORTANT !!!
+  # Set to the authorized_keys entry provided on your Cased Shell settings page, e.g. # Obtain this value from your shell's settings page, e.g. https://app.cased.com/shell/programs/shell_EXAMPLE/settings
+  - PUBLIC_KEY="cert-authority,principals="noreply+org_EXAMPLE@cased.com" ecdsa-sha2-nistp256 AAAAEXAMPLE="
+  - KUBECTL_VERSION=v1.20.12
