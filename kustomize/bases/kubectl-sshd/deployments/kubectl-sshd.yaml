@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kubectl-sshd
+  name: kubectl-sshd
+spec:
+  selector:
+    matchLabels:
+      app: kubectl-sshd
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: 'kubectl-sshd'
+      labels:
+        app: kubectl-sshd
+    spec:
+      serviceAccountName: kubectl-sshd
+      containers:
+        - name: kubectl-sshd
+          image: linuxserver/openssh-server
+          command:
+            - /bin/sh
+            - -ec
+            - |
+              echo "Welcome to the Cased Shell kubectl container. Grant the kubectl-sshd serviceaccount access to anything you'd like to access." > /etc/motd
+
+              curl -sL https://storage.googleapis.com/kubernetes-release/release/$KUBECTL_VERSION/bin/linux/amd64/kubectl -o /usr/local/bin/kubectl
+              chmod +x /usr/local/bin/kubectl
+
+              mkdir -p /config/custom-cont-init.d/
+              cat << EOF > /config/custom-cont-init.d/88-cased
+              #!/bin/sh
+              sed -i 's@#PermitUserEnvironment no@PermitUserEnvironment yes@' /etc/ssh/sshd_config
+              touch /done
+              EOF
+              chmod a+x /config/custom-cont-init.d/88-cased
+
+              cat > /setup.sh <<EOF
+              #!/bin/sh
+              mkdir -p /home/$USER_NAME
+              cp -r /config/.ssh /home/$USER_NAME/
+              env | grep KUBERNETES > /home/$USER_NAME/.ssh/environment
+              chown -R $USER_NAME:$USER_NAME /home/$USER_NAME
+              usermod -d /home/$USER_NAME $USER_NAME
+              tail -F /does-not-exist 2>/dev/null
+              EOF
+              chmod +x /setup.sh
+              /init /setup.sh
+          env:
+            - name: USER_NAME
+              value: kubectl
+            - name: PASSWORD_ACCESS
+              value: "false"
+            - name: SUDO_ACCESS
+              value: "false"
+          envFrom:
+            - configMapRef:
+                name: kubectl-sshd
+          ports:
+            - name: sshd
+              containerPort: 2222

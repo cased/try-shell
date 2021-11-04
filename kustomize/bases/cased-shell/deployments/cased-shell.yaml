@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cased-shell
+  name: cased-shell
+spec:
+  selector:
+    matchLabels:
+      app: cased-shell
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        kubectl.kubernetes.io/default-container: 'cased-shell'
+      labels:
+        app: cased-shell
+    spec:
+      enableServiceLinks: false
+      serviceAccountName: cased-shell
+      containers:
+        - name: cased-shell
+          image: ghcr.io/cased/shell:unstable
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: config
+              mountPath: "/config"
+              readOnly: true
+          ports:
+            - name: https
+              containerPort: 443
+          envFrom:
+            - secretRef:
+                name: cased-shell
+            - configMapRef:
+                name: cased-shell
+          env:
+            - name: CASED_SHELL_LOG_LEVEL
+              value: info
+            - name: CASED_SHELL_HOST_FILE
+              value: /config/jump.json
+          readinessProbe:
+            httpGet:
+              path: /_health
+              port: 80
+        - name: jump
+          image: ghcr.io/cased/jump:latest
+          imagePullPolicy: Always
+          command: ["/bin/app", "/jump/jump.yaml", "/config/jump.json"]
+          volumeMounts:
+            - name: config
+              mountPath: "/config"
+            - name: jump
+              mountPath: "/jump"
+      volumes:
+      - name: config
+        emptyDir: {}
+      - name: jump
+        configMap:
+          name: jump
