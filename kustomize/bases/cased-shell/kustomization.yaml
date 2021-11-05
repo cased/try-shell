@@ -1,0 +1,4 @@
+resources:
+- deployments/cased-shell.yaml
+- serviceaccounts/cased-shell.yaml
+- services/cased-shell.yaml

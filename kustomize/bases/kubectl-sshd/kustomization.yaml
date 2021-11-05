@@ -1,0 +1,4 @@
+resources:
+- deployments/kubectl-sshd.yaml
+- serviceaccounts/kubectl-sshd.yaml
+- services/kubectl-sshd.yaml
