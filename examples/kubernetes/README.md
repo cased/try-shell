@@ -17,8 +17,6 @@ The example in this directory deploys Cased Shell and an internally-accessible S
 ```
 git clone https://github.com/cased/try-shell
 cd try-shell
-# TODO remove before merge
-git checkout kustomize
 ```
 
 ### Create a namespace
