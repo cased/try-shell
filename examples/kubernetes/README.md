@@ -21,10 +21,10 @@ cd try-shell
 ```
 ### Update configuration
 
-Obtain the value of `CASED_SHELL_SECRET` from your Shell Instance's settings page (e.g. https://app.cased.com/shell/programs/shell_EXAMPLE/settings) and set it in `.env`.
+Obtain the value of `CASED_SHELL_SECRET` from your Shell Instance's settings page (e.g. https://app.cased.com/shell/programs/shell_EXAMPLE/settings) and set it in `examples/kubernetes/.env`.
 
 ```
-vi .env
+vi examples/kubernetes/.env
 ```
 
 Obtain the `~/.ssh/authorized_keys` entry referenced on your Shell Instance's settings page. The value should look something like:
