@@ -39,7 +39,7 @@ Set this as the value of the `PUBLIC_KEY` in the example `kustomization.yaml`:
 vi examples/kubernetes/kustomization.yaml
 ```
 
-While you're there, also make sure to set the value of CASED_SHELL_HOSTNAME to `localhost:NNNN` where `NNNN` is the port of your Shell Instance.
+While you're there, also make sure to set the value of `CASED_SHELL_HOSTNAME` to `localhost:NNNN` where `NNNN` is the port of your Shell Instance.
 
 ### Preview configuration
 
