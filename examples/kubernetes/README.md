@@ -110,4 +110,6 @@ kubectl -n shell port-forward service/cased-shell NNNN:http
 ```
 ### Visit your shell
 
-Next, visit your shell instance at http://localhost:NNNN. After logging in, click the `kubectl` prompt to run interactive commands using `kubectl`, or use the `event log` link to see a stream of all Kubernetes events. Edit `jump.yaml` to add additional entries, making sure to run `kubectl apply` again to apply the change.
+Next, visit your shell instance at http://localhost:NNNN. After logging in, click the `kubectl` prompt to run interactive commands using `kubectl`, or use the `event log` link to see a stream of all Kubernetes events. Edit `jump.yaml` to add additional prompt entries to fit your use cases, making sure to run `kubectl apply` again to apply the change. 
+
+> If you have any questions, please email us at support@cased.com!
