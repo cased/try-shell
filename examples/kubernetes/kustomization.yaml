@@ -2,9 +2,9 @@ namespace: shell
 
 resources:
 # A Cased Shell Deployment, Service, and ServiceAccount
-- https://github.com/cased/try-shell/kustomize/bases/cased-shell
+- ../../kustomize/bases/cased-shell
 # A SSHD Deployment, Service, and ServiceAccount
-- https://github.com/cased/try-shell/kustomize/bases/kubectl-sshd
+- ../../kustomize/bases/kubectl-sshd
 # A ClusterRoleBinding granting the the kubectl-sshd ServiceAccount admin access to the cluster.
 - clusterrolebindings/kubectl-sshd.yaml
 
@@ -19,7 +19,9 @@ configMapGenerator:
   - ./jump.yaml
 - name: cased-shell
   literals:
-  - CASED_SHELL_HOSTNAME=localhost:8888
+  # !!! IMPORTANT !!!
+  # Update to match the port of your demo shell.
+  - CASED_SHELL_HOSTNAME=localhost:8899
   - CASED_SHELL_TLS=off
   # https://docs.cased.com/docs/environment-variables
 - name: kubectl-sshd
