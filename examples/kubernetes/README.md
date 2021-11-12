@@ -9,7 +9,7 @@
 
 ## Summary
 
-The example in this directory deploys Cased Shell and an internally-accessible SSH server to your Kubernetes cluster. The container running the SSH server is granted admin access to the Kubernetes cluster, and is configured to allow access from any connection using the Certificate Authority member of your SSO organization. Access to the web interface is facilitated using `kubectl port-forward`.
+The example in this directory deploys Cased Shell and an internally-accessible SSH server to your Kubernetes cluster. Access to the internal SSH service requires a SSH certificate signed by your Cased Organzation (which Cased Shell facilitates). Once authenticated, users have access to `kubectl` with admin access to the Kubernetes cluster. Access to the web interface is facilitated using `kubectl port-forward`.
 
 ## Deploying
 
