@@ -4,12 +4,12 @@
 
 ### Prerequisites
 
-- `kubectl` access to a Kubernetes cluster that can either provide public access to a service (via a Service Load Balancer or Ingress Controller) or private access to a Service with self-managed TLS.
-- Access to the settings tab of Cased Shell instance with a 'hostname' of `localhost:NNNN`. (e.g. https://app.cased.com/shell/programs/shell_EXAMPLE/settings) with Certificate Authentication enabled.
+- `kubectl` access to the Kubernetes cluster you'd like to deploy Cased Shell to.
+- Access to the settings tab of Cased Shell instance with a 'hostname' of `localhost:NNNN` where `NNNN` is a free local port like `8899` (e.g. https://app.cased.com/shell/programs/shell_EXAMPLE/settings).
 
 ## Summary
 
-The example in this directory deploys Cased Shell and an internally-accessible SSH server to your Kubernetes cluster. The container running the SSH server is granted admin access to the Kubernetes cluster, and is configured to allow access from any connection using the Certificate Authority member of your SSO organization. Access to the demo install of Cased Shell is facilitated using `kubectl port-forward`.
+The example in this directory deploys Cased Shell and an internally-accessible SSH server to your Kubernetes cluster. The container running the SSH server is granted admin access to the Kubernetes cluster, and is configured to allow access from any connection using the Certificate Authority member of your SSO organization. Access to the web interface is facilitated using `kubectl port-forward`.
 
 ## Deploying
 
@@ -21,7 +21,7 @@ cd try-shell
 ```
 ### Update configuration
 
-Obtain the value of `CASED_SHELL_SECRET` Shell Instance's settings page (e.g. https://app.cased.com/shell/programs/shell_EXAMPLE/settings) and set it in `.env`.
+Obtain the value of `CASED_SHELL_SECRET` from your Shell Instance's settings page (e.g. https://app.cased.com/shell/programs/shell_EXAMPLE/settings) and set it in `.env`.
 
 ```
 vi .env
@@ -39,7 +39,7 @@ Set this as the value of the `PUBLIC_KEY` in the example `kustomization.yaml`:
 vi examples/kubernetes/kustomization.yaml
 ```
 
-While you're there, also make sure to set the value of CASED_SHELL_HOSTNAME to `localhost:NNNN` where `NNNN` is the port of your Shell Instance's settings page.
+While you're there, also make sure to set the value of CASED_SHELL_HOSTNAME to `localhost:NNNN` where `NNNN` is the port of your Shell Instance.
 
 ### Preview configuration
 
@@ -103,7 +103,7 @@ replicaset.apps/kubectl-sshd-c99b55f9d   1         1         1       26s
 
 ## Port forward
 
-Run the following, making sure to replace `NNNN` with the port of your Shell Instance's settings page:
+Run the following, making sure to replace `NNNN` with the port of your Shell Instance:
 
 ```
 kubectl -n shell port-forward service/cased-shell NNNN:http
