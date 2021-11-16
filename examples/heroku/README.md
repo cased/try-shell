@@ -10,5 +10,7 @@
 heroku git:remote -a <app_name>
 heroku stack:set container
 heroku labs:enable runtime-dyno-metadata
-git push heroku master
+git push heroku main
 ```
+
+Open https://<app_name>.herokuapp.com in your browser and login.
