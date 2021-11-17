@@ -21,6 +21,9 @@ func setWinsize(f *os.File, w, h int) {
 func main() {
 	s := &ssh.Server{
 		Addr: "127.0.0.1:2224",
+		PublicKeyHandler: func(ctx ssh.Context, key ssh.PublicKey) bool {
+			return true
+		},
 		PasswordHandler: func(ctx ssh.Context, password string) bool {
 			return true
 		},
