@@ -9,5 +9,5 @@ RUN apt-get update && \
     echo "PasswordAuthentication No" > /etc/sshd_config
 
 ADD --chown=heroku:nogroup heroku-bashrc /home/heroku/.bashrc
-ADD prompts /prompts.json
+ADD prompts.json /
 ENV CASED_SHELL_HOST_FILE=/prompts.json
