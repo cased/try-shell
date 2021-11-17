@@ -7,6 +7,6 @@ RUN apt-get update && \
     curl https://cli-assets.heroku.com/install.sh | sh && \
     echo "PasswordAuthentication No" > /etc/sshd_config
 
-ADD /heroku-bashrc
+ADD heroku-bashrc /
 ADD prompts.json /
 ENV CASED_SHELL_HOST_FILE=/prompts.json
