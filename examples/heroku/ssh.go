@@ -27,7 +27,7 @@ func main() {
 	}
 
 	s.Handle(func(s ssh.Session) {
-		cmd := exec.Command("bash", "-i", "--rcfile", "/heroku-bashrc")
+		cmd := exec.Command("bash", "--rcfile", "/heroku-bashrc")
 		ptyReq, winCh, isPty := s.Pty()
 		if isPty {
 			cmd.Env = append(cmd.Env, fmt.Sprintf("TERM=%s", ptyReq.Term))
