@@ -3,6 +3,7 @@
     {
       "name": "heroku cli",
       "hostname": "localhost",
+      "port": "2224",
       "username": "heroku",
       "labels": {
         "network": "localhost",
