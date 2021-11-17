@@ -19,7 +19,14 @@ func setWinsize(f *os.File, w, h int) {
 }
 
 func main() {
-	ssh.Handle(func(s ssh.Session) {
+	s := &ssh.Server{
+		Addr: "127.0.0.1:2224",
+		PasswordHandler: func(ctx ssh.Context, password string) bool {
+			return true
+		},
+	}
+
+	s.Handle(func(s ssh.Session) {
 		cmd := exec.Command("bash", "-i", "--rcfile", "/heroku-bashrc")
 		ptyReq, winCh, isPty := s.Pty()
 		if isPty {
@@ -45,5 +52,5 @@ func main() {
 	})
 
 	log.Println("starting ssh server on port 2224...")
-	log.Fatal(ssh.ListenAndServe("127.0.0.1:2224", nil))
+	log.Fatal(s.ListenAndServe())
 }
