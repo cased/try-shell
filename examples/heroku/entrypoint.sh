@@ -1,5 +1,8 @@
 #!/bin/bash
 
+su - heroku -c "ssh-keygen -P '' -f /home/heroku/.ssh/id_rsa; \
+                cp /home/heroku/.ssh/id_rsa.pub /home/heroku/.ssh/authorized_keys"
+
 /usr/sbin/sshd &
 
 # Configure for Heroku
