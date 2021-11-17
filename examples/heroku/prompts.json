@@ -1,0 +1,13 @@
+{
+  "prompts": [
+    {
+      "name": "heroku cli",
+      "hostname": "localhost",
+      "username": "heroku",
+      "labels": {
+        "network": "localhost",
+        "app": "heroku"
+      }
+    }
+  ]
+}
