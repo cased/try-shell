@@ -1,6 +1,6 @@
 FROM ghcr.io/cased/shell:latest
 ADD entrypoint.sh /
-ENTRYPOINT [ "/sbin/tini", "--", "/entrypoint.sh" ]
+ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
 CMD []
 RUN apt-get update && \
     apt-get install -y openssh-server vim-nox && \
