@@ -34,6 +34,7 @@ func main() {
 		ptyReq, winCh, isPty := s.Pty()
 		if isPty {
 			cmd.Env = append(cmd.Env, fmt.Sprintf("TERM=%s", ptyReq.Term))
+			cmd.Env = append(cmd.Env, "SHELL=/bin/bash")
 			f, err := pty.Start(cmd)
 			if err != nil {
 				panic(err)
