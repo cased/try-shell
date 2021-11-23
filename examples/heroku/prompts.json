@@ -2,7 +2,9 @@
   "prompts": [
     {
       "name": "heroku cli",
+      "description": "login and run heroku commands",
       "hostname": "localhost",
+      "featured": true,
       "port": "2224",
       "username": "heroku",
       "labels": {
