@@ -9,4 +9,6 @@ trap "rm -rf $dir" EXIT
 # Tell all other programs (like the Heroku CLI) that this temp directory is our home
 export HOME=$dir
 
-yes | heroku login
+# Interactive login required when IPs don't match
+# https://devcenter.heroku.com/changelog-items/1873
+heroku login -i
