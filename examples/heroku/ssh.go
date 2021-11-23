@@ -83,7 +83,7 @@ func casedShellPublicKeyHandler(ctx ssh.Context, pubKey ssh.PublicKey) bool {
 	return true
 }
 
-func casedShellSessionHandler(command []string) ssh.Handler {
+func casedShellSessionHandler(tokens *sessionOAuthTokens, command []string) ssh.Handler {
 	return func(s ssh.Session) {
 		log.Printf("accepted connection for user %s\n", s.User())
 		if len(s.Command()) > 0 {
@@ -92,13 +92,35 @@ func casedShellSessionHandler(command []string) ssh.Handler {
 			s.Exit(1)
 			return
 		}
-		log.Println("starting shell")
-		cmd := exec.Command(command[0], command[1:]...)
+
+		log.Println("starting pty")
 		ptyReq, winCh, isPty := s.Pty()
+
 		if isPty {
+			cert, ok := s.PublicKey().(*gossh.Certificate)
+			if !ok {
+				io.WriteString(s, "error parsing SSH Certificate\n")
+				s.Exit(1)
+				return
+			}
+			io.WriteString(s, fmt.Sprintf("Login to Heroku: https://%s/oauth/auth?stateToken=%s\n", os.Getenv("CASED_SHELL_HOSTNAME"), cert.KeyId))
+			io.WriteString(s, "\nWaiting for token...")
+			var token string
+			for range time.Tick(time.Second * 1) {
+				if tokens.Get(cert.KeyId) == "" || tokens.Get(cert.KeyId) == "pending" {
+					io.WriteString(s, ".")
+					continue
+				} else {
+					token = tokens.Get(cert.KeyId)
+					io.WriteString(s, "done!\n")
+					break
+				}
+			}
+			cmd := exec.Command(command[0], command[1:]...)
 			cmd.Env = append(cmd.Env, fmt.Sprintf("TERM=%s", ptyReq.Term))
 			cmd.Env = append(cmd.Env, "SHELL=/bin/bash")
 			cmd.Env = append(cmd.Env, fmt.Sprintf("HOME=%s", os.Getenv("HOME")))
+			cmd.Env = append(cmd.Env, fmt.Sprintf("HEROKU_API_KEY=%s", token))
 			f, err := pty.Start(cmd)
 			if err != nil {
 				io.WriteString(s, "error starting PTY\n")
@@ -120,18 +142,4 @@ func casedShellSessionHandler(command []string) ssh.Handler {
 			s.Exit(1)
 		}
 	}
-}
-
-func main() {
-	s := &ssh.Server{
-		Addr:             ":2224",
-		PublicKeyHandler: casedShellPublicKeyHandler,
-		IdleTimeout:      60 * time.Second,
-		Version:          "Cased Shell SSH",
-	}
-
-	s.Handle(casedShellSessionHandler([]string{"bash", "--rcfile", "/heroku-bashrc"}))
-
-	log.Println("starting ssh server on port 2224...")
-	log.Fatal(s.ListenAndServe())
 }

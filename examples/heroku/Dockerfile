@@ -28,10 +28,10 @@ RUN strip /bin/app
 # Compress the compiled action
 RUN upx -q -9 /bin/app
 
-FROM ghcr.io/cased/shell:unstable
+FROM ghcr.io/cased/shell:pr-1523
 ENTRYPOINT [ "/bin/bash", "/entrypoint.sh" ]
 CMD []
 RUN curl https://cli-assets.heroku.com/install.sh | sh
-ADD entrypoint.sh prompts.json heroku-bashrc /
+ADD entrypoint.sh prompts.json /
 COPY --from=builder /bin/app /bin/heroku-ssh
 ENV CASED_SHELL_HOST_FILE=/prompts.json
