@@ -18,8 +18,8 @@ import (
 	gossh "golang.org/x/crypto/ssh"
 )
 
-const (
-	shellUrl = "http://localhost:8888"
+var (
+	shellUrl = os.Args[1]
 )
 
 func setWinsize(f *os.File, w, h int) {
