@@ -22,9 +22,8 @@ var (
 			AuthURL:  "https://id.heroku.com/oauth/authorize",
 			TokenURL: "https://id.heroku.com/oauth/token",
 		},
-		Scopes:      []string{"global"},                          // See https://devcenter.heroku.com/articles/oauth#scopes
-		RedirectURL: "http://localhost:8888/oauth/auth/callback", // See https://devcenter.heroku.com/articles/dyno-metadata
-	}
+		Scopes:      []string{"global"},                                                              // See https://devcenter.heroku.com/articles/oauth#scopes
+		RedirectURL: "https://" + os.Getenv("HEROKU_APP_NAME") + "herokuapp.com/oauth/auth/callback"} // See https://devcenter.heroku.com/articles/dyno-metadata
 )
 
 func init() {

@@ -108,7 +108,6 @@ func casedShellSessionHandler(tokens *sessionOAuthTokens, command []string) ssh.
 			var token string
 			for range time.Tick(time.Second * 1) {
 				if tokens.Get(cert.KeyId) == "" || tokens.Get(cert.KeyId) == "pending" {
-					io.WriteString(s, ".")
 					continue
 				} else {
 					token = tokens.Get(cert.KeyId)
