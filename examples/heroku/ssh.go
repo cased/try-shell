@@ -126,6 +126,7 @@ func main() {
 		Addr:             ":2224",
 		PublicKeyHandler: casedShellPublicKeyHandler,
 		IdleTimeout:      60 * time.Second,
+		Version:          "Cased Shell SSH",
 	}
 
 	s.Handle(casedShellSessionHandler([]string{"bash", "--rcfile", "/heroku-bashrc"}))
