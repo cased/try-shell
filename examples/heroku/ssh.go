@@ -98,6 +98,7 @@ func casedShellSessionHandler(command []string) ssh.Handler {
 		if isPty {
 			cmd.Env = append(cmd.Env, fmt.Sprintf("TERM=%s", ptyReq.Term))
 			cmd.Env = append(cmd.Env, "SHELL=/bin/bash")
+			cmd.Env = append(cmd.Env, fmt.Sprintf("HOME=%s", os.Getenv("HOME")))
 			f, err := pty.Start(cmd)
 			if err != nil {
 				io.WriteString(s, "error starting PTY\n")
