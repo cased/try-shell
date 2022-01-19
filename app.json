@@ -8,10 +8,10 @@
   "success_url": "/",
   "env": {
     "CASED_SHELL_HOSTNAME": {
-      "description": "The hostname of the Cased Shell instance you've created at https://cased.com."
+      "description": "The hostname of the Cased Shell instance you've created at https://app.cased.com. <app-name>.herokuapp.com"
     },
     "CASED_SHELL_SECRET": {
-      "description": "The secret from the settings tab of the Cased Shell instance you've created at https://cased.com."
+      "description": "The secret from the settings tab of the Cased Shell instance you've created at https://app.cased.com."
     }
   }
 }
