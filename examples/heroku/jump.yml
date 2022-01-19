@@ -1,0 +1,12 @@
+queries:
+  - provider: static
+    prompt:
+      name: example bash shell
+      description: an interactive shell
+      featured: true
+      username: heroku
+      hostname: localhost
+      port: $HEROKU_SSH_PORT
+      labels:
+        app: bash
+        type: interactive
