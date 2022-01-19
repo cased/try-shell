@@ -1,0 +1,17 @@
+{
+  "name": "Cased Shell",
+  "description": "The terminal for teams.",
+  "website": "https://cased.com/",
+  "repository": "https://github.com/cased/try-shell",
+  "logo": "https://github.com/cased.png",
+  "stack": "container",
+  "success_url": "/",
+  "env": {
+    "CASED_SHELL_HOSTNAME": {
+      "description": "The hostname of the Cased Shell instance you've created at https://cased.com."
+    },
+    "CASED_SHELL_SECRET": {
+      "description": "The secret from the settings tab of the Cased Shell instance you've created at https://cased.com."
+    }
+  }
+}
