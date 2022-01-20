@@ -1,4 +1,4 @@
-FROM ghcr.io/cased/shell:latest
+FROM ghcr.io/cased/shell:v0.10.4
 COPY --from=ghcr.io/cased/ssh-oauth-handlers:pr-5 /bin/app /bin/userspace-ssh
 COPY --from=ghcr.io/cased/jump:latest /bin/app /bin/jump
 ADD entrypoint.sh jump.yml /
