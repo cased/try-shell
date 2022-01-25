@@ -32,6 +32,6 @@ CASED_SHELL_HOSTNAME=<hostname> CASED_SHELL_SECRET=<secret> AUTHORIZED_KEY=<auth
 ## Experimental: Heroku
 
 1. Create a Cased Shell instance named `<something>.herokuapp.com`. On the Settings tab, enable Certificate Authentication.
-2. Click this button:
+2. Click this button (using Chrome):
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
