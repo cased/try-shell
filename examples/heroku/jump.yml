@@ -1,0 +1,63 @@
+queries:
+  - provider: static
+    prompt:
+      name: example bash shell
+      description: an interactive shell
+      featured: true
+      username: heroku
+      hostname: localhost
+      port: $HEROKU_SSH_PORT
+      labels:
+        app: example
+        type: interactive
+  - provider: static
+    prompt:
+      name: host configuration instructions
+      description: instructions for granting this Cased Shell instance access to your host
+      featured: true
+      username: heroku
+      hostname: localhost
+      port: $HEROKU_SSH_PORT
+      closeTerminalOnExit: false
+      shellCommand: >
+        bash -c "
+        /bin/echo -e 'Add the following line to ~/.ssh/authorized_keys on a host to grant this instance of Cased Shell access:\n\n';
+        cat /proc/$(pgrep -f entrypoint)/environ | tr '\0' '\n' > .env;
+        source .env;
+        curl http://\$CASED_SHELL_HOSTNAME/.ssh/authorized_keys;
+        "
+      labels:
+        app: example
+        type: task
+
+  - provider: static
+    prompt:
+      name: your host goes here
+      description: an interactive shell
+      featured: true
+      username: example
+      hostname: your-host-here.example.com
+      labels:
+        environment: production
+        app: example
+        type: interactive
+
+  - provider: static
+    prompt:
+      featured: true
+      username: example
+      hostname: your-host-here-3.prd.example.com
+      labels:
+        environment: production
+        app: example
+        type: interactive
+
+  - provider: static
+    prompt:
+      featured: true
+      username: example
+      hostname: your-host-here-2.stg.example.com
+      labels:
+        environment: staging
+        app: bash
+        type: interactive
