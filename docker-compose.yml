@@ -5,7 +5,7 @@ networks:
 services:
   try-shell:
     # switch to :latest once https://github.com/cased/cased/pull/1469 is included in a release
-    image: ghcr.io/cased/shell:unstable
+    image: ghcr.io/cased/shell:latest
     pull_policy: always
     depends_on:
       - jump

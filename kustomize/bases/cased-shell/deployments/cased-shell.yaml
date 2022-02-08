@@ -20,7 +20,7 @@ spec:
       serviceAccountName: cased-shell
       containers:
         - name: cased-shell
-          image: ghcr.io/cased/shell:unstable
+          image: ghcr.io/cased/shell:latest
           imagePullPolicy: Always
           volumeMounts:
             - name: config
